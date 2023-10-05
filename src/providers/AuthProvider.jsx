@@ -1,12 +1,17 @@
 import { createContext, useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, TwitterAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import app from "../firebase/firebase.config";
 
-export const AuthContext =  createContext(null)
+export const AuthContext = createContext(null)
+
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
+const twitterProvider = new TwitterAuthProvider();
 
 const auth = getAuth(app);
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
+
 
     const [loading, setLoading] = useState(true)
 
@@ -14,28 +19,41 @@ const AuthProvider = ({children}) => {
         setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password)
     }
-    const singIn = (email, password) => {
+    const singIn = (email, password, displayName) => {
         setLoading(true)
-        return signInWithEmailAndPassword(auth, email, password)
+        return signInWithEmailAndPassword(auth, email, password, displayName)
     }
-    const logOut = () =>{
-        setLoading(true) 
+    const googleSignIn = () => {
+        return signInWithPopup(auth, googleProvider)
+    }
+    const githubSingIn = () => {
+        return signInWithPopup(auth, githubProvider)
+    }
+    const twitterSingIn = () => {
+        return signInWithPopup(auth, twitterProvider)
+    }
+    const logOut = () => {
+        setLoading(true)
         return signOut(auth)
     }
-    useEffect(()=>{
+
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            console.log('user in the auth state changed', currentUser)
+            console.log(currentUser)
             setUser(currentUser)
             setLoading(false)
         })
         return () => unsubscribe()
-    },[])
-  
+    }, [])
+
     const authInfo = {
         user,
         loading,
         createUser,
         singIn,
+        googleSignIn,
+        githubSingIn,
+        twitterSingIn,
         logOut,
     }
     return (

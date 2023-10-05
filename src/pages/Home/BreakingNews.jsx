@@ -1,12 +1,16 @@
 import React from 'react';
 import Marquee from "react-fast-marquee";
+import NewsCard from './NewsCard';
 
-const BreakingNews = () => {
+const BreakingNews = ({ newsData }) => {
+    const { details } = newsData
     return (
         <div className='flex'>
             <button className="btn btn-secondary">Breaking News</button>
-            <Marquee pauseOnHover={true} speed={100}>
-                I can be a React component, multiple React components, or just some text.
+            <Marquee pauseOnHover={true} speed={120}>
+                {
+                    newsData.map(news => <p>{news.title}</p>)
+                }
             </Marquee>
         </div>
     );

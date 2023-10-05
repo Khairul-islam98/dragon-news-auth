@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../providers/AuthProvider';
 
 const Login = () => {
-    const { singIn } = useContext(AuthContext)
+    const { singIn, googleSignIn, githubSingIn, twitterSingIn } = useContext(AuthContext)
     const location = useLocation()
     const navigate = useNavigate()
 
@@ -15,12 +15,33 @@ const Login = () => {
 
         const email = form.get('email')
         const password = form.get('password')
-       
+
         singIn(email, password)
+            .then(result => {
+                console.log(result.user);
+
+                navigate(location?.state ? location.state : '/')
+            })
+            .catch(error => console.error(error))
+    }
+    const handleGoogleSingIn = () => {
+        googleSignIn()
+            .then(result => {
+                console.log(result.user)
+            })
+            .catch(error => console.error(error))
+    }
+    const handleGithubSingIn = () => {
+        githubSingIn()
         .then(result => {
             console.log(result.user)
-
-            navigate(location?.state ? location.state : '/')
+        })
+        .catch(error => console.error(error))
+    }
+    const handleTwitterSingIn = () => {
+        twitterSingIn()
+        .then(result => {
+            console.log(result.user)
         })
         .catch(error => console.error(error))
     }
@@ -52,6 +73,11 @@ const Login = () => {
                 </form>
                 <p className='text-center py-5'>Don't have an account <Link to='/register' className='text-blue-600 font-bold'>Register</Link></p>
             </div>
+            <p className='flex justify-center items-center gap-6'>
+                <button onClick={handleGoogleSingIn} className='btn btn-secondary'>Google</button>
+                <button onClick={handleGithubSingIn} className='btn btn-primary'>Github</button>
+                <button onClick={handleTwitterSingIn} className='btn btn-neutral'>Twitter</button>
+            </p>
         </div>
     );
 };
