@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Navbar from '../share/Navbar/Navbar';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../providers/AuthProvider';
 
 const Login = () => {
+    const { singIn } = useContext(AuthContext)
+    const location = useLocation()
+    const navigate = useNavigate()
+
     const handleLogin = e => {
         e.preventDefault();
         console.log(e.currentTarget)
         const form = new FormData(e.currentTarget)
-        console.log(form.get('password'))
 
+        const email = form.get('email')
+        const password = form.get('password')
+       
+        singIn(email, password)
+        .then(result => {
+            console.log(result.user)
+
+            navigate(location?.state ? location.state : '/')
+        })
+        .catch(error => console.error(error))
     }
     return (
         <div>
