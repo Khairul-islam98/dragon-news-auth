@@ -3,7 +3,7 @@ import React from 'react';
 const Home = () => {
     return (
         <div>
-            This is home
+            <h2 className="text-3xl font-poppins">This is home</h2>
         </div>
     );
 };
