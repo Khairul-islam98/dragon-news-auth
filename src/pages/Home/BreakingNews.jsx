@@ -1,9 +1,10 @@
 import React from 'react';
 import Marquee from "react-fast-marquee";
 import NewsCard from './NewsCard';
+import { useLoaderData } from 'react-router-dom';
 
-const BreakingNews = ({ newsData }) => {
-    const { details } = newsData
+const BreakingNews = () => {
+    const newsData = useLoaderData()
     return (
         <div className='flex'>
             <button className="btn btn-secondary">Breaking News</button>
